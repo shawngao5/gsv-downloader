@@ -136,6 +136,19 @@ GSVPANO.PanoLoader = function (parameters) {
 		}
 	};
 
+	this.loadWithoutImage = function (location, callback) {
+		if ((typeof location) === 'string') {
+			_panoClient.getPanoramaById(location, function(result, status){
+				callback(result, status);
+			})
+		}
+		else {
+			_panoClient.getPanoramaByLocation(location, 50,  function(result, status){
+				callback(result, status);
+			})
+		}
+	};
+
 	this.setZoom = function( z ) {
 		_zoom = z;
 		this.adaptTextureToZoom();

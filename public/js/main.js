@@ -10,6 +10,7 @@ var NAV_DELTA = 45;
 var FAR = 1000;
 var USE_DEPTH = true;
 var WORLD_FACTOR = 1.0;
+var MAX_STEPS = 100;
 
 // Globals
 // ----------------------------------------------
@@ -17,11 +18,38 @@ var WIDTH, HEIGHT;
 var currHeading = 0;
 var centerHeading = 0;
 var navList = [];
+var stepCount = 0;
 
 
 var currentLocation = null;
 
-function initialize() {
+function initPano() {
+  panoLoader = new GSVPANO.PanoLoader();
+  panoDepthLoader = new GSVPANO.PanoDepthLoader();
+  panoLoader.setZoom(QUALITY);
+
+  // panoLoader.onProgress = function( progress ) {
+
+  // };
+  // panoLoader.onPanoramaData = function( result ) {
+
+  // };
+
+  // panoLoader.onNoPanoramaData = function( status ) {
+  //   //alert('no data!');
+  // };
+
+  // panoLoader.onPanoramaLoad = function() {
+
+  // };
+
+  // panoDepthLoader.onDepthLoad = function() {
+
+  // };
+}
+
+function initGoogleMap() {
+
   currentLocation = new google.maps.LatLng( DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lng );
 
   var mapOptions = {
@@ -70,8 +98,24 @@ function initialize() {
 
 }
 
+function loadPosition(result, status) {
+  console.log(result);
+  console.log(status);
+  if (stepCount >= MAX_STEPS) return;
+  setTimeout(function() {
+    panoLoader.loadWithoutImage( result.links[0].pano, loadPosition );
+  }, 0);
+  stepCount++;
+}
+
 function startDownload() {
-  
+  stepCount = 0;
+  panoLoader.loadWithoutImage( currentLocation, loadPosition );
+}
+
+function initialize() {
+  initGoogleMap();
+  initPano();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
