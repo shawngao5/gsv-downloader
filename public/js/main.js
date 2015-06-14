@@ -1,6 +1,6 @@
 // Parameters
 // ----------------------------------------------
-var QUALITY = 3;
+var QUALITY = 4;
 var DEFAULT_LOCATION = { lat:44.301945982379095,  lng:9.211585521697998 };
 var USE_TRACKER = false;
 var GAMEPAD_SPEED = 0.04;
@@ -10,7 +10,7 @@ var NAV_DELTA = 45;
 var FAR = 1000;
 var USE_DEPTH = true;
 var WORLD_FACTOR = 1.0;
-var MAX_STEPS = 100;
+var MAX_STEPS = 1;
 
 // Globals
 // ----------------------------------------------
@@ -99,8 +99,22 @@ function initGoogleMap() {
 }
 
 function loadPosition(result, status) {
+  // console.log(JSON.stringify(result));
   console.log(result);
   console.log(status);
+  var panoinfo = {
+    links: result.links,
+    location: {
+      description: result.location.description,
+      lat: result.location.latLng.A,
+      lng: result.location.latLng.F,
+      pano: result.location.pano
+    }
+  }
+  console.log(JSON.stringify(panoinfo));
+  // $.post("http://127.0.0.1:3000/panoinfo", "fsdfsdfsd");
+  $.post("panoinfo", panoinfo);
+
   if (stepCount >= MAX_STEPS) return;
   setTimeout(function() {
     panoLoader.loadWithoutImage( result.links[0].pano, loadPosition );
