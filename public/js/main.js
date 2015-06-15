@@ -10,7 +10,7 @@ var NAV_DELTA = 45;
 var FAR = 1000;
 var USE_DEPTH = true;
 var WORLD_FACTOR = 1.0;
-var MAX_STEPS = 1;
+var MAX_STEPS = 1000;
 
 // Globals
 // ----------------------------------------------
@@ -125,6 +125,7 @@ function loadPosition(result, status) {
 function startDownload() {
   stepCount = 0;
   panoLoader.loadWithoutImage( currentLocation, loadPosition );
+  $.get("start")
 }
 
 function initialize() {
