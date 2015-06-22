@@ -10,7 +10,7 @@ var NAV_DELTA = 45;
 var FAR = 1000;
 var USE_DEPTH = true;
 var WORLD_FACTOR = 1.0;
-var MAX_STEPS = 2;
+var MAX_STEPS = 30;
 
 // Globals
 // ----------------------------------------------

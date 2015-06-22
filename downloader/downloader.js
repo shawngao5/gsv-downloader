@@ -80,7 +80,10 @@ var downloader = function () {
     for( y = 0; y < h; y++) {
       for( x = 0; x < w; x++) {
         url = 'http://maps.google.cn/cbk?output=tile&panoid=' + panoid + '&zoom=' + _zoom + '&x=' + x + '&y=' + y;
-        dl.get(url);
+        var dest = __dirname + "/../public/gsv/" + dest + ".jpeg";
+        if (!fs.existsSync(dest)) {
+          dl.get(url);
+        }
       }
     }
   }
