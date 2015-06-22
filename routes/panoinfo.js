@@ -3,17 +3,43 @@ var router = express.Router();
 var Downloader = require('../downloader/downloader')
 var downloader = new Downloader();
 
+var fs = require("fs");
+var file = __dirname + "/../database/panoinfo.db";
+var exists = fs.existsSync(file);
+var sqlite3 = require("sqlite3").verbose();
+var db = new sqlite3.Database(file);
+
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  console.log(req)
-  res.send('get');
+router.get('/:panoid', function(req, res, next) {
+  console.log(req.params.panoid);
+  try {
+    db.all("SELECT info FROM panoinfo WHERE panoid = '" + req.params.panoid + "'", function(err, rows) {
+      if (rows.length > 0) {
+        console.log(rows[0].info);
+        res.send(rows[0].info);
+      }
+    });
+  }
+  catch (e) {
+    console.log(e);
+    res.send("");
+  }
+  
 });
 
 router.post('/', function(req, res, next) {
-  console.log(req.body['location[pano]'])
-  console.log(downloader.addPanoId)
+  console.log(JSON.parse(req.body.text));
+  // console.log(downloader.addPanoId)
 
-  downloader.addPanoId(req.body['location[pano]']);
+  var data = JSON.parse(req.body.text);
+
+  var stmt = db.prepare("INSERT OR IGNORE INTO panoinfo VALUES (?, ?, ?, ?)");
+
+  stmt.run(data.location.lat, data.location.lng, data.location.pano, req.body.text);
+
+  stmt.finalize();
+
+  downloader.addPanoId(data.location.pano);
 
   res.send('post');
 

@@ -10,7 +10,7 @@ var NAV_DELTA = 45;
 var FAR = 1000;
 var USE_DEPTH = true;
 var WORLD_FACTOR = 1.0;
-var MAX_STEPS = 1000;
+var MAX_STEPS = 2;
 
 // Globals
 // ----------------------------------------------
@@ -113,7 +113,7 @@ function loadPosition(result, status) {
   }
   console.log(JSON.stringify(panoinfo));
   // $.post("http://127.0.0.1:3000/panoinfo", "fsdfsdfsd");
-  $.post("panoinfo", panoinfo);
+  $.post("panoinfo", {'text': JSON.stringify(panoinfo)});
 
   if (stepCount >= MAX_STEPS) return;
   setTimeout(function() {
