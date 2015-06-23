@@ -11,24 +11,26 @@ var db = new sqlite3.Database(file);
 
 /* GET users listing. */
 router.get('/:panoid', function(req, res, next) {
-  console.log(req.params.panoid);
+  // console.log(req.params.panoid);
   try {
     db.all("SELECT info FROM panoinfo WHERE panoid = '" + req.params.panoid + "'", function(err, rows) {
       if (rows.length > 0) {
-        console.log(rows[0].info);
+        // console.log(rows[0].info);
         res.send(rows[0].info);
+      } else {
+        res.send('{"id": "' + req.params.panoid + '"}');
       }
     });
   }
   catch (e) {
     console.log(e);
-    res.send("");
+    res.send('{"id": "' + req.params.panoid + '"}');
   }
   
 });
 
 router.post('/', function(req, res, next) {
-  console.log(JSON.parse(req.body.text));
+  // console.log(JSON.parse(req.body.text));
   // console.log(downloader.addPanoId)
 
   var data = JSON.parse(req.body.text);

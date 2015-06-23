@@ -77,6 +77,8 @@ var downloader = function () {
     if (_zoom == 3) w-=1;
     if (_zoom == 4) { w -= 3; h-=1;}
 
+    console.log("Downloading " + panoid);
+
     for( y = 0; y < h; y++) {
       for( x = 0; x < w; x++) {
         url = 'http://maps.google.cn/cbk?output=tile&panoid=' + panoid + '&zoom=' + _zoom + '&x=' + x + '&y=' + y;
@@ -107,8 +109,8 @@ var downloader = function () {
     _currentConnection++;
 
     dl.run(function(err, files) {
-      console.log(err)
-      console.log(files)
+      // console.log(err)
+       // console.log("Downloading " + files);
       _currentConnection--;
     })
 

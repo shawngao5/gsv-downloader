@@ -10,7 +10,7 @@ var NAV_DELTA = 45;
 var FAR = 1000;
 var USE_DEPTH = true;
 var WORLD_FACTOR = 1.0;
-var MAX_STEPS = 30;
+var MAX_STEPS = 100;
 
 // Globals
 // ----------------------------------------------
@@ -19,6 +19,10 @@ var currHeading = 0;
 var centerHeading = 0;
 var navList = [];
 var stepCount = 0;
+
+var downloadedPanoIdList = [];
+var panoidWaitingList = [];
+
 
 
 var currentLocation = null;
@@ -98,7 +102,7 @@ function initGoogleMap() {
 
 }
 
-function loadPosition(result, status) {
+function downloadPanoInfo(result, status) {
   // console.log(JSON.stringify(result));
   console.log(result);
   console.log(status);
@@ -115,22 +119,44 @@ function loadPosition(result, status) {
   // $.post("http://127.0.0.1:3000/panoinfo", "fsdfsdfsd");
   $.post("panoinfo", {'text': JSON.stringify(panoinfo)});
 
-  if (stepCount >= MAX_STEPS) return;
-  setTimeout(function() {
-    panoLoader.loadWithoutImage( result.links[0].pano, loadPosition );
-  }, 0);
+  for (var i = 0; i < result.links.length; i++) {
+    $.get("panoinfo/" + result.links[i].pano, function(ret) {
+      // console.log(ret);
+      var data = JSON.parse(ret);
+      if (data.id) {
+        panoidWaitingList.push(data.id);
+        console.log("download " + data.id)
+      } else {
+        console.log(data.location.pano + "  already download");
+      }
+    })
+    
+  };
+
   stepCount++;
+}
+
+function timeOutRoutine() {
+  var panoid = panoidWaitingList.shift();
+  if (panoid) {
+    panoLoader.loadWithoutImage(panoid, downloadPanoInfo);
+  }
+  if (stepCount >= MAX_STEPS) return;
+  setTimeout(timeOutRoutine, 0);
 }
 
 function startDownload() {
   stepCount = 0;
-  panoLoader.loadWithoutImage( currentLocation, loadPosition );
+  downloadedPanoIdList = [];
+  panoidWaitingList = [];
+  panoLoader.loadWithoutImage( currentLocation, downloadPanoInfo);
   $.get("start")
 }
 
 function initialize() {
   initGoogleMap();
   initPano();
+  setTimeout(timeOutRoutine, 0);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
