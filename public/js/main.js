@@ -10,7 +10,7 @@ var NAV_DELTA = 45;
 var FAR = 1000;
 var USE_DEPTH = true;
 var WORLD_FACTOR = 1.0;
-var MAX_STEPS = 100;
+var MAX_STEPS = 10;
 
 // Globals
 // ----------------------------------------------
@@ -26,6 +26,8 @@ var panoidWaitingList = [];
 
 
 var currentLocation = null;
+
+var collectTimer = null;
 
 function initPano() {
   panoLoader = new GSVPANO.PanoLoader();
@@ -100,14 +102,16 @@ function initGoogleMap() {
 
   $('#maplocation').val(currentLocation.toString())
 
+  $("#steps").val(""+MAX_STEPS)
 }
 
 function downloadPanoInfo(result, status) {
   // console.log(JSON.stringify(result));
-  console.log(result);
-  console.log(status);
+  // console.log(result);
+  // console.log(status);
   var panoinfo = {
     links: result.links,
+    tiles: result.tiles,
     location: {
       description: result.location.description,
       lat: result.location.latLng.A,
@@ -115,48 +119,77 @@ function downloadPanoInfo(result, status) {
       pano: result.location.pano
     }
   }
-  console.log(JSON.stringify(panoinfo));
+  // console.log(JSON.stringify(panoinfo));
   // $.post("http://127.0.0.1:3000/panoinfo", "fsdfsdfsd");
   $.post("panoinfo", {'text': JSON.stringify(panoinfo)});
+
+  stepCount++;
 
   for (var i = 0; i < result.links.length; i++) {
     $.get("panoinfo/" + result.links[i].pano, function(ret) {
       // console.log(ret);
       var data = JSON.parse(ret);
       if (data.id) {
+        // console.log("download " + data.id)
         panoidWaitingList.push(data.id);
-        console.log("download " + data.id)
+        console.log(panoidWaitingList)
+        if (!collectTimer) {
+          collectTimer = setTimeout(timeOutRoutine, 0);
+        };
       } else {
-        console.log(data.location.pano + "  already download");
+        // console.log(data.location.pano + "  already download");
       }
     })
     
   };
-
-  stepCount++;
 }
 
 function timeOutRoutine() {
+  if (stepCount >= MAX_STEPS) {
+    console.log("aaaaaaaaaaaaaaaaaaaaaa")
+    collectTimer = null;
+    return;
+  }
   var panoid = panoidWaitingList.shift();
   if (panoid) {
     panoLoader.loadWithoutImage(panoid, downloadPanoInfo);
+  } else {
+    // console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+    // collectTimer = null;
+    // return;
   }
-  if (stepCount >= MAX_STEPS) return;
+
   setTimeout(timeOutRoutine, 0);
 }
 
-function startDownload() {
+function startCollect() {
+  var downloadedPanoIdList = [];
+  var panoidWaitingList = [];
   stepCount = 0;
-  downloadedPanoIdList = [];
-  panoidWaitingList = [];
+  MAX_STEPS = parseInt($("#steps").val());
+  console.log("MAX_STEPS: " + MAX_STEPS)
+  
   panoLoader.loadWithoutImage( currentLocation, downloadPanoInfo);
-  $.get("start")
+  
+}
+
+function startDownload() {
+  $.get("/start")
+}
+
+function getPanoId() {
+  panoLoader.loadWithoutImage( currentLocation, function(result, status) {
+    $("#panoid").val(result.location.pano);
+  });
+}
+
+function cleanDownloadStatus() {
+  $.get("/clean");
 }
 
 function initialize() {
   initGoogleMap();
   initPano();
-  setTimeout(timeOutRoutine, 0);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

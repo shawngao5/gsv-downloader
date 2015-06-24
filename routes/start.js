@@ -7,7 +7,7 @@ var downloader = new Downloader();
 router.get('/', function(req, res, next) {
   console.log(downloader)
   downloader.start();
-  res.send('respond with a resource');
+  res.send('');
 });
 
 module.exports = router;

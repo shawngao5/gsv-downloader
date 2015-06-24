@@ -45,14 +45,19 @@
 
     <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
 
-    <script src="http://maps.google.cn/maps/api/js?sensor=false"></script>
+    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
     <script type="text/javascript" src="js/main.js"></script>
 
     
   </head>
   <body>
-    <input class="maplocation" id="maplocation" placeholder="Search" type="text"/><button onclick="startDownload()">Download</button>
+    <input class="maplocation" id="maplocation" placeholder="Search" type="text"/>
+    <input id="steps" placeholder="Steps" type="text"/>
+    <button onclick="startCollect()">Collect</button>
+    <button onclick="startDownload()">Download</button>
+    <input id="panoid"></input>
+    <button onclick="getPanoId()">GetPanoId</button>
     <div id="map-canvas"></div>
   </body>
 </html>

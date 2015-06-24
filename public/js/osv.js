@@ -6,7 +6,7 @@
 
 // Parameters
 // ----------------------------------------------
-var QUALITY = 3;
+var QUALITY = 4;
 var DEFAULT_LOCATION = { lat:44.301945982379095,  lng:9.211585521697998 };
 var DEFAULT_PANOID = "";
 var USE_TRACKER = false;
@@ -261,14 +261,15 @@ function initPano() {
 function setSphereGeometry() {
   var geom = projSphere.geometry;
   var geomParam = geom.parameters;
-  var depthMap = panoDepthLoader.depthMap.depthMap;
+  // var depthMap = panoDepthLoader.depthMap.depthMap;
   var y, x, u, v, radius, i=0;
   for ( y = 0; y <= geomParam.heightSegments; y ++ ) {
     for ( x = 0; x <= geomParam.widthSegments; x ++ ) {
       u = x / geomParam.widthSegments;
       v = y / geomParam.heightSegments;
 
-      radius = USE_DEPTH ? Math.min(depthMap[y*512 + x], FAR) : 500;
+      // radius = USE_DEPTH ? Math.min(depthMap[y*512 + x], FAR) : 500;
+      radius = 500;
 
       var vertex = geom.vertices[i];
       vertex.x = - radius * Math.cos( geomParam.phiStart + u * geomParam.phiLength ) * Math.sin( geomParam.thetaStart + v * geomParam.thetaLength );
@@ -347,7 +348,7 @@ function moveToNextPlace() {
   var minDelta = 360;
   var navList = panoLoader.links;
   for (var i = 0; i < navList.length; i++) {
-    var delta = deltaAngleDeg(currHeading + 180.0, navList[i].heading);
+    var delta = deltaAngleDeg(currHeading, navList[i].heading);
     if (delta < minDelta && delta < NAV_DELTA) {
       minDelta = delta;
       nextPoint = navList[i].pano;
@@ -355,6 +356,7 @@ function moveToNextPlace() {
   }
 
   if (nextPoint) {
+    // currHeading = 0.0;
     panoLoader.loadByPanoId(nextPoint);
     // panoLoader.load(nextPoint);
   }
@@ -401,6 +403,8 @@ function loop() {
   // Compute heading
   headingVector.setFromQuaternion(camera.quaternion, 'YZX');
   currHeading = angleRangeDeg(THREE.Math.radToDeg(-headingVector.y));
+
+  // console.log(currHeading);
 
   controls.update();
 

@@ -35,13 +35,13 @@ router.post('/', function(req, res, next) {
 
   var data = JSON.parse(req.body.text);
 
-  var stmt = db.prepare("INSERT OR IGNORE INTO panoinfo VALUES (?, ?, ?, ?)");
+  var stmt = db.prepare("INSERT OR IGNORE INTO panoinfo VALUES (?, ?, ?, ?, 0, 0)");
 
   stmt.run(data.location.lat, data.location.lng, data.location.pano, req.body.text);
 
   stmt.finalize();
 
-  downloader.addPanoId(data.location.pano);
+  // downloader.addPanoId(data.location.pano);
 
   res.send('post');
 
