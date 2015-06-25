@@ -6,7 +6,7 @@
 
 // Parameters
 // ----------------------------------------------
-var QUALITY = 4;
+var QUALITY = 3;
 var DEFAULT_LOCATION = { lat:44.301945982379095,  lng:9.211585521697998 };
 var DEFAULT_PANOID = "";
 var USE_TRACKER = false;

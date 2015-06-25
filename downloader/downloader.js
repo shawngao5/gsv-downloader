@@ -18,7 +18,7 @@ var keepaliveAgent = new Agent({
 
 
 var _panoidList = [];
-var _zoom = 4;
+var _zoom = 3;
 var _connectionLimit = 3;
 var _currentConnection = 0;
 var _idListLimit = 10;
