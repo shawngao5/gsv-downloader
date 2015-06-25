@@ -129,6 +129,9 @@ function initControls() {
         $('#depth').prop('checked', USE_DEPTH);
         setSphereGeometry();
         break;
+      case 0:
+        moveToNextPlace();
+        break;
     }
   });
 
