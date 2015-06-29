@@ -22,6 +22,8 @@ var stepCount = 0;
 
 var downloadedPanoIdList = [];
 var panoidWaitingList = [];
+var gmap = null;
+var maker = null;
 
 
 
@@ -64,15 +66,15 @@ function initGoogleMap() {
     mapTypeId: google.maps.MapTypeId.HYBRID,
     streetViewControl: false
   };
-  var gmap = new google.maps.Map(document.getElementById('map-canvas'),
+  gmap = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
 
-  var marker = new google.maps.Marker({ position: currentLocation, map: gmap });
+  marker = new google.maps.Marker({ position: currentLocation, map: gmap });
   marker.setMap( gmap );
 
   google.maps.event.addListener(gmap, 'click', function(event) {
     currentLocation = event.latLng;
-    $('#maplocation').val(currentLocation.toString())
+    $('#maplocation').val(currentLocation.A + ',' +currentLocation.F)
     marker.setMap( null );
     marker = new google.maps.Marker({ position: event.latLng, map: gmap });
     marker.setMap( gmap );
@@ -100,7 +102,7 @@ function initGoogleMap() {
     e.stopPropagation();
   });
 
-  $('#maplocation').val(currentLocation.toString())
+  $('#maplocation').val(currentLocation.A + ',' + currentLocation.F)
 
   $("#steps").val(""+MAX_STEPS)
 }
@@ -160,6 +162,15 @@ function timeOutRoutine() {
   }
 
   setTimeout(timeOutRoutine, 0);
+}
+
+function locat() {
+  var latLngStr = $("#maplocation").val();
+  var latLngArray = latLngStr.split(',')
+  var currentLocation = new google.maps.LatLng(parseFloat(latLngArray[0]), parseFloat(latLngArray[1]) );
+  marker.setMap( null );
+  marker = new google.maps.Marker({ position: currentLocation, map: gmap });
+  marker.setMap( gmap );
 }
 
 function startCollect() {
