@@ -2,3 +2,4 @@ node_modules
 .gitconfig
 public/gsv
 npm-debug.log
+public/panoinfo

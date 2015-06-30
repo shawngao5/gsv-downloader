@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var start = require('./routes/start');
 var panoinfo = require('./routes/panoinfo');
 var clean = require('./routes/clean');
+var exportmeta = require('./routes/exportmeta');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use('/', routes);
 app.use('/start', start);
 app.use('/panoinfo', panoinfo);
 app.use('/clean', clean);
+app.use('/exportmeta', exportmeta);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

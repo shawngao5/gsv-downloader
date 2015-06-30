@@ -15,7 +15,8 @@
     "jade": "~1.9.2",
     "morgan": "~1.5.3",
     "serve-favicon": "~2.2.1",
-    "sqlite3": "^3.0.8"
+    "sqlite3": "^3.0.8",
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {
     "mt-downloader": "^0.2.11"

@@ -23,7 +23,7 @@ var stepCount = 0;
 var downloadedPanoIdList = [];
 var panoidWaitingList = [];
 var gmap = null;
-var maker = null;
+var marker = null;
 
 
 
@@ -167,7 +167,7 @@ function timeOutRoutine() {
 function locat() {
   var latLngStr = $("#maplocation").val();
   var latLngArray = latLngStr.split(',')
-  var currentLocation = new google.maps.LatLng(parseFloat(latLngArray[0]), parseFloat(latLngArray[1]) );
+  currentLocation = new google.maps.LatLng(parseFloat(latLngArray[0]), parseFloat(latLngArray[1]) );
   marker.setMap( null );
   marker = new google.maps.Marker({ position: currentLocation, map: gmap });
   marker.setMap( gmap );
