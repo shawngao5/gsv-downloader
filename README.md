@@ -1,1 +1,1 @@
-# gsv-downloader
+Download and view google street view.
